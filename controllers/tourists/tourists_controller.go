@@ -1,8 +1,10 @@
 package tourists
 
 import (
-	"tourism-monitoring/controllers/tourists/response"
+	"strconv"
 	"tourism-monitoring/controllers/base"
+	"tourism-monitoring/controllers/tourists/response"
+	"tourism-monitoring/entities"
 	"tourism-monitoring/services/tourists"
 
 	"github.com/labstack/echo/v4"
@@ -23,3 +25,47 @@ func (controller TouristsController) GetAllTourists(c echo.Context) error {
 	}
 	return base.SuccesResponse(c, response.FromTouristEntities(tourists))
 }
+
+func (controller TouristsController) GetTouristByID(c echo.Context) error {
+	id, _ := strconv.Atoi(c.Param("id"))
+	user, err := controller.touristsService.GetTouristByID(id)
+	if err != nil {
+		return base.ErrorResponse(c, err)
+	}
+	return base.SuccesResponse(c, user)
+}
+
+func (controller TouristsController) InsertTourist(c echo.Context) error {
+	user := new(entities.User)
+	if err := c.Bind(user); err != nil {
+		return base.ErrorResponse(c, err)
+	}
+
+	createdUser, err := controller.touristsService.InsertTourist(*user)
+	if err != nil {
+		return base.ErrorResponse(c, err)
+	}
+	return base.SuccesResponse(c, createdUser)
+}
+
+func (controller TouristsController) UpdateTourist(c echo.Context) error {
+	user := new(entities.User)
+	if err := c.Bind(user); err != nil {
+		return base.ErrorResponse(c, err)
+	}
+
+	updatedUser, err := controller.touristsService.UpdateTourist(user.ID, *user)
+	if err != nil {
+		return base.ErrorResponse(c, err)
+	}
+	return base.SuccesResponse(c, updatedUser)
+}
+
+func (controller TouristsController) DeleteTourist(c echo.Context) error {
+	id, _ := strconv.Atoi(c.Param("id"))
+	if err := controller.touristsService.DeleteTourist(id); err != nil {
+		return base.ErrorResponse(c, err)
+	}
+	return base.SuccesResponse(c, "User deleted successfully")
+}
+
