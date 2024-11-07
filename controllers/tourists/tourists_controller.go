@@ -28,11 +28,11 @@ func (controller TouristsController) GetAllTourists(c echo.Context) error {
 
 func (controller TouristsController) GetTouristByID(c echo.Context) error {
 	id, _ := strconv.Atoi(c.Param("id"))
-	user, err := controller.touristsService.GetTouristByID(id)
+	tourists, err := controller.touristsService.GetTouristByID(id)
 	if err != nil {
 		return base.ErrorResponse(c, err)
 	}
-	return base.SuccesResponse(c, user)
+	return base.SuccesResponse(c, response.FromTouristEntity(tourists))
 }
 
 func (controller TouristsController) InsertTourist(c echo.Context) error {
@@ -49,16 +49,19 @@ func (controller TouristsController) InsertTourist(c echo.Context) error {
 }
 
 func (controller TouristsController) UpdateTourist(c echo.Context) error {
+	id, _ := strconv.Atoi(c.Param("id"))
+
 	user := new(entities.User)
 	if err := c.Bind(user); err != nil {
 		return base.ErrorResponse(c, err)
 	}
 
-	updatedUser, err := controller.touristsService.UpdateTourist(user.ID, *user)
+	updatedUser, err := controller.touristsService.UpdateTourist(id, *user)
 	if err != nil {
 		return base.ErrorResponse(c, err)
 	}
-	return base.SuccesResponse(c, updatedUser)
+
+	return base.SuccesResponse(c, response.FromTouristEntity(updatedUser))
 }
 
 func (controller TouristsController) DeleteTourist(c echo.Context) error {

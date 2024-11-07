@@ -23,3 +23,13 @@ func FromTouristEntities(users []entities.User) []TouristResponse {
 	}
 	return responses
 }
+
+func FromTouristEntity(user entities.User) TouristResponse {
+    return TouristResponse{
+        Nama:          user.Nama,
+        Usia:          user.Usia,
+        Asal:          user.Asal,
+        JenisKelamin:  user.JenisKelamin,
+        TipeWisatawan: user.TipeWisatawan,
+    }
+}
