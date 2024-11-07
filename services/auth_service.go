@@ -41,7 +41,7 @@ func (authService AuthService) Login(user entities.User) (entities.User, error) 
 	}
 
 	// Generate JWT token for the user
-	token, err := authService.jwtInterface.GenerateJWT(dbUser.ID, dbUser.Nama)
+	token, err := authService.jwtInterface.GenerateJWT(dbUser.ID, dbUser.Nama, dbUser.Role)
 	if err != nil {
 		return entities.User{}, err
 	}
@@ -72,7 +72,7 @@ func (authService AuthService) Register(user entities.User) (entities.User, erro
 	}
 
 	// Generate JWT token for the new user
-	token, err := authService.jwtInterface.GenerateJWT(createdUser.ID, createdUser.Nama)
+	token, err := authService.jwtInterface.GenerateJWT(createdUser.ID, createdUser.Nama, createdUser.Role)
 	if err != nil {
 		return entities.User{}, err
 	}
