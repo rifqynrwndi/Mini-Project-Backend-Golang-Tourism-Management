@@ -1,0 +1,54 @@
+package places
+
+import (
+	"tourism-monitoring/entities"
+
+	"gorm.io/gorm"
+)
+
+type PlacesRepo struct {
+	db *gorm.DB
+}
+
+func NewPlacesRepo(db *gorm.DB) *PlacesRepo {
+	return &PlacesRepo{db: db}
+}
+
+func (repo PlacesRepo) GetAllPlaces() ([]entities.Place, error) {
+	var places []entities.Place
+	if err := repo.db.Find(&places).Error; err != nil {
+		return nil, err
+	}
+	return places, nil
+}
+
+func (repo PlacesRepo) GetPlaceByID(id int) (entities.Place, error) {
+	var places []entities.Place
+	if err := repo.db.Where("id = ?", id).Find(&places).Error; err != nil {
+		return entities.Place{}, err
+	}
+	return places[0], nil
+}
+
+func (repo PlacesRepo) InsertPlace(place entities.Place) (entities.Place, error) {
+	if err := repo.db.Create(&place).Error; err != nil {
+		return entities.Place{}, err
+	}
+	return place, nil
+}
+
+func (repo PlacesRepo) UpdatePlace(id int, place entities.Place) (entities.Place, error) {
+	if err := repo.db.Model(&place).Where("id = ?", id).Updates(place).Error; err != nil {
+		return entities.Place{}, err
+	}
+	return place, nil
+}
+
+func (repo PlacesRepo) DeletePlace(id int) error {
+	if err := repo.db.Where("id = ?", id).Delete(&entities.Place{}).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
+

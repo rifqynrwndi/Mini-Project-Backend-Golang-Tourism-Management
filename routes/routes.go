@@ -4,6 +4,7 @@ import (
 	"os"
 	"tourism-monitoring/controllers/auth"
 	"tourism-monitoring/controllers/tourists"
+	"tourism-monitoring/controllers/places"
 	"tourism-monitoring/middleware"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -15,6 +16,7 @@ import (
 type RouteController struct {
 	AuthController     *auth.AuthController
 	TouristsController *tourists.TouristsController
+	PlacesController   *places.PlacesController
 }
 
 func (rc RouteController) InitRoute(e *echo.Echo) {
@@ -40,4 +42,21 @@ func (rc RouteController) InitRoute(e *echo.Echo) {
 	eAdmin.POST("", rc.TouristsController.InsertTourist)
 	eAdmin.PUT("/:id", rc.TouristsController.UpdateTourist)
 	eAdmin.DELETE("/:id", rc.TouristsController.DeleteTourist)
+
+	// Public routes for tourists
+	e.GET("/tourists", rc.TouristsController.GetAllTourists)
+	e.GET("/tourists/:id", rc.TouristsController.GetTouristByID)
+
+	// Admin-only routes for places
+	eAdminPlaces := eJWT.Group("/places")
+	eAdminPlaces.Use(middleware.AdminOnly)
+	eAdminPlaces.GET("", rc.PlacesController.GetAllPlaces)
+	eAdminPlaces.GET("/:id", rc.PlacesController.GetPlaceById)
+	eAdminPlaces.POST("", rc.PlacesController.InsertPlace)
+	eAdminPlaces.PUT("/:id", rc.PlacesController.UpdatePlace)
+	eAdminPlaces.DELETE("/:id", rc.PlacesController.DeletePlace)
+
+	// Public routes for places
+	e.GET("/places", rc.PlacesController.GetAllPlaces)
+	e.GET("/places/:id", rc.PlacesController.GetPlaceById)
 }
