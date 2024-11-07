@@ -58,12 +58,24 @@ func (authService AuthService) Register(user entities.User) (entities.User, erro
 		return entities.User{}, constant.PASSWORD_IS_EMPTY
 	}
 
+	// Set default role if not provided
+    if user.Role == "" {
+        user.Role = "user"
+    }
+
 	// Hash password before saving to database
 	hashedPassword, err := HashPassword(user.Password)
 	if err != nil {
 		return entities.User{}, err
 	}
 	user.Password = hashedPassword
+
+	// Get the last ID and assign a new ID for the user
+    lastID, err := authService.authRepoInterface.GetLastUserID()
+    if err != nil {
+        return entities.User{}, err
+    }
+    user.ID = lastID + 1
 
 	// Register new user in the database
 	createdUser, err := authService.authRepoInterface.Register(user)

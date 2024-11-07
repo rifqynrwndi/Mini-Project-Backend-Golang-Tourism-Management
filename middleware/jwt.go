@@ -10,7 +10,7 @@ import (
 type JwtTourism struct {
 }
 
-type jwtCustomClaims struct {
+type JwtCustomClaims struct {
 	Name   string `json:"name"`
 	UserID int    `json:"userID"`
 	Role   string `json:"role"`
@@ -18,7 +18,7 @@ type jwtCustomClaims struct {
 }
 
 func (jwtTourism JwtTourism) GenerateJWT(userID int, name, role string) (string, error) {
-	claims := &jwtCustomClaims{
+	claims := &JwtCustomClaims{
 		Name:   name,
 		UserID: userID,
 		Role:   role,

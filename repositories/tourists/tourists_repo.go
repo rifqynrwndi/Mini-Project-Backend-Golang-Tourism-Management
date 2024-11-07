@@ -21,3 +21,33 @@ func (repo TouristsRepo) GetAllTourists() ([]entities.User, error) {
 	}
 	return users, nil
 }
+
+// only shows nama, usia, asal, jenis kelamin, tipe wisatawan
+func (repo TouristsRepo) GetTouristByID(id int) (entities.User, error) {
+	var users []entities.User
+	if err := repo.db.Select("nama", "usia", "asal", "jenis_kelamin", "tipe_wisatawan").Where("id = ?", id).Find(&users).Error; err != nil {
+		return entities.User{}, err
+	}
+	return users[0], nil
+}
+
+func (repo TouristsRepo) InsertTourist(user entities.User) (entities.User, error) {
+	if err := repo.db.Create(&user).Error; err != nil {
+		return entities.User{}, err
+	}
+	return user, nil
+}
+
+func (repo TouristsRepo) UpdateTourist(id int, user entities.User) (entities.User, error) {
+	if err := repo.db.Model(&user).Where("id = ?", id).Updates(user).Error; err != nil {
+		return entities.User{}, err
+	}
+	return user, nil
+}
+
+func (repo TouristsRepo) DeleteTourist(id int) error {
+	if err := repo.db.Where("id = ?", id).Delete(&entities.User{}).Error; err != nil {
+		return err
+	}
+	return nil
+}
