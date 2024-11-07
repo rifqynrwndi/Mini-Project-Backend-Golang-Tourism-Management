@@ -40,5 +40,10 @@ func (authRepo AuthRepo) GetUserByEmail(email string) (entities.User, error) {
 	return user, nil
 }
 
-
-
+func (authRepo AuthRepo) GetLastUserID() (int, error) {
+    var user entities.User
+    if err := authRepo.db.Last(&user).Error; err != nil {
+        return 0, err
+    }
+    return user.ID, nil
+}

@@ -6,7 +6,9 @@ import (
 	"tourism-monitoring/controllers/tourists"
 	"tourism-monitoring/middleware"
 
+	"github.com/golang-jwt/jwt/v5"
 	echojwt "github.com/labstack/echo-jwt/v4"
+
 	"github.com/labstack/echo/v4"
 )
 
@@ -22,7 +24,13 @@ func (rc RouteController) InitRoute(e *echo.Echo) {
 
 	// Protected routes with JWT
 	eJWT := e.Group("")
-	eJWT.Use(echojwt.JWT([]byte(os.Getenv("JWT_SECRET_KEY"))))
+	eJWT.Use(echojwt.WithConfig(echojwt.Config{
+		SigningKey: []byte(os.Getenv("JWT_SECRET_KEY")),
+		ContextKey: "user",
+		NewClaimsFunc: func(c echo.Context) jwt.Claims {
+			return new(middleware.JwtCustomClaims)
+		},
+	}))
 
 	// Admin-only routes for tourists
 	eAdmin := eJWT.Group("/tourists")
