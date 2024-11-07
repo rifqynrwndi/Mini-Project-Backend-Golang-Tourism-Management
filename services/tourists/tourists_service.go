@@ -16,3 +16,19 @@ func NewTouristsService(repo *tourists.TouristsRepo) *TouristsService {
 func (service TouristsService) GetAllTourists() ([]entities.User, error) {
 	return service.touristsRepo.GetAllTourists()
 }
+
+func (service TouristsService) GetTouristByID(id int) (entities.User, error) {
+	return service.touristsRepo.GetTouristByID(id)
+}
+
+func (service TouristsService) InsertTourist(user entities.User) (entities.User, error) {
+	return service.touristsRepo.InsertTourist(user)
+}
+
+func (service TouristsService) UpdateTourist(id int, user entities.User) (entities.User, error) {
+	return service.touristsRepo.UpdateTourist(id, user)
+}
+
+func (service TouristsService) DeleteTourist(id int) error {
+	return service.touristsRepo.DeleteTourist(id)
+}
