@@ -6,14 +6,18 @@ import (
 	authController "tourism-monitoring/controllers/auth"
 	touristsController "tourism-monitoring/controllers/tourists"
 	placesController "tourism-monitoring/controllers/places"
+	visitReportController "tourism-monitoring/controllers/visit_report"
 	"tourism-monitoring/middleware"
 	authRepo "tourism-monitoring/repositories/auth"
 	touristsRepo "tourism-monitoring/repositories/tourists"
 	placesRepo "tourism-monitoring/repositories/places"
+	visitReportRepo "tourism-monitoring/repositories/visit_report"
 	"tourism-monitoring/routes"
 	authService "tourism-monitoring/services"
 	touristsService "tourism-monitoring/services/tourists"
 	placesService "tourism-monitoring/services/places"
+	visitReportService "tourism-monitoring/services/visit_report"
+	
 
 	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
@@ -48,10 +52,16 @@ func main() {
 	placesService := placesService.NewPlacesService(placesRepo)
 	placesController := placesController.NewPlacesController(placesService)
 
+	// Initialize Visit Report
+	visitReportRepo := visitReportRepo.NewVisitReportRepo(db)
+	visitReportService := visitReportService.NewVisitReportService(visitReportRepo)
+	visitReportController := visitReportController.NewVisitReportController(visitReportService)
+
 	routeController := routes.RouteController{
 		AuthController:     authController,
 		TouristsController: touristsController,
 		PlacesController:   placesController,
+		VisitReportController: visitReportController,
 	}
 	routeController.InitRoute(e)
 

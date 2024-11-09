@@ -27,6 +27,10 @@ func (repo PlacesRepo) GetPlaceByID(id int) (entities.Place, error) {
 	if err := repo.db.Where("id = ?", id).Find(&places).Error; err != nil {
 		return entities.Place{}, err
 	}
+
+	if len(places) == 0 {
+		return entities.Place{}, gorm.ErrRecordNotFound
+	}
 	return places[0], nil
 }
 

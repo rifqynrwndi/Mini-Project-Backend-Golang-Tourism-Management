@@ -3,8 +3,9 @@ package routes
 import (
 	"os"
 	"tourism-monitoring/controllers/auth"
-	"tourism-monitoring/controllers/tourists"
 	"tourism-monitoring/controllers/places"
+	"tourism-monitoring/controllers/tourists"
+	"tourism-monitoring/controllers/visit_report"
 	"tourism-monitoring/middleware"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -17,6 +18,7 @@ type RouteController struct {
 	AuthController     *auth.AuthController
 	TouristsController *tourists.TouristsController
 	PlacesController   *places.PlacesController
+	VisitReportController *visit_report.VisitReportController
 }
 
 func (rc RouteController) InitRoute(e *echo.Echo) {
@@ -59,4 +61,13 @@ func (rc RouteController) InitRoute(e *echo.Echo) {
 	// Public routes for places
 	e.GET("/places", rc.PlacesController.GetAllPlaces)
 	e.GET("/places/:id", rc.PlacesController.GetPlaceById)
+
+	// Admid-only routes for visit report
+	eAdminVisitReport := eJWT.Group("/visit_reports")
+	eAdminVisitReport.Use(middleware.AdminOnly)
+	eAdminVisitReport.GET("", rc.VisitReportController.GetAllVisitReports)
+	eAdminVisitReport.GET("/:id", rc.VisitReportController.GetVisitReportByID)
+	eAdminVisitReport.POST("", rc.VisitReportController.InsertVisitReport)
+	eAdminVisitReport.PUT("/:id", rc.VisitReportController.UpdateVisitReport)
+	eAdminVisitReport.DELETE("/:id", rc.VisitReportController.DeleteVisitReport)
 }

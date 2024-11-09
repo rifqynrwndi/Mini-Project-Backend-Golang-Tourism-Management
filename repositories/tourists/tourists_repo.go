@@ -27,6 +27,10 @@ func (repo TouristsRepo) GetTouristByID(id int) (entities.User, error) {
 	if err := repo.db.Select("id", "nama", "usia", "asal", "jenis_kelamin", "tipe_wisatawan").Where("id = ?", id).Find(&users).Error; err != nil {
 		return entities.User{}, err
 	}
+
+	if len(users) == 0 {
+		return entities.User{}, gorm.ErrRecordNotFound
+	}
 	return users[0], nil
 }
 
