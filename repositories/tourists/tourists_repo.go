@@ -16,17 +16,20 @@ func NewTouristsRepo(db *gorm.DB) *TouristsRepo {
 
 func (repo TouristsRepo) GetAllTourists() ([]entities.User, error) {
 	var users []entities.User
-	if err := repo.db.Select("nama", "usia", "asal", "jenis_kelamin", "tipe_wisatawan").Find(&users).Error; err != nil {
+	if err := repo.db.Select("id","nama", "usia", "asal", "jenis_kelamin", "tipe_wisatawan").Find(&users).Error; err != nil {
 		return nil, err
 	}
 	return users, nil
 }
 
-// only shows nama, usia, asal, jenis kelamin, tipe wisatawan
 func (repo TouristsRepo) GetTouristByID(id int) (entities.User, error) {
 	var users []entities.User
-	if err := repo.db.Select("nama", "usia", "asal", "jenis_kelamin", "tipe_wisatawan").Where("id = ?", id).Find(&users).Error; err != nil {
+	if err := repo.db.Select("id", "nama", "usia", "asal", "jenis_kelamin", "tipe_wisatawan").Where("id = ?", id).Find(&users).Error; err != nil {
 		return entities.User{}, err
+	}
+
+	if len(users) == 0 {
+		return entities.User{}, gorm.ErrRecordNotFound
 	}
 	return users[0], nil
 }
@@ -51,3 +54,4 @@ func (repo TouristsRepo) DeleteTourist(id int) error {
 	}
 	return nil
 }
+

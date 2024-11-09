@@ -1,7 +1,7 @@
 package entities
 
 type User struct {
-    ID           int    `gorm:"primaryKey"`
+    ID           int    `gorm:"primaryKey" json:"id_wisatawan"`
     Nama         string `json:"nama"`
     Usia         int    `json:"usia"`
     Asal         string `json:"asal"`
