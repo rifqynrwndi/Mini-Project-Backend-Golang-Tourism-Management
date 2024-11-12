@@ -7,17 +7,20 @@ import (
 	touristsController "tourism-monitoring/controllers/tourists"
 	placesController "tourism-monitoring/controllers/places"
 	visitReportController "tourism-monitoring/controllers/visit_report"
+	trashReportController "tourism-monitoring/controllers/trash_report"
+
 	"tourism-monitoring/middleware"
 	authRepo "tourism-monitoring/repositories/auth"
 	touristsRepo "tourism-monitoring/repositories/tourists"
 	placesRepo "tourism-monitoring/repositories/places"
 	visitReportRepo "tourism-monitoring/repositories/visit_report"
+	trashReportRepo "tourism-monitoring/repositories/trash_report"
 	"tourism-monitoring/routes"
 	authService "tourism-monitoring/services"
 	touristsService "tourism-monitoring/services/tourists"
 	placesService "tourism-monitoring/services/places"
 	visitReportService "tourism-monitoring/services/visit_report"
-	
+	trashReportService "tourism-monitoring/services/trash_report"
 
 	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
@@ -57,11 +60,17 @@ func main() {
 	visitReportService := visitReportService.NewVisitReportService(visitReportRepo)
 	visitReportController := visitReportController.NewVisitReportController(visitReportService)
 
+	// Initialize Trash Report
+	trashReportRepo := trashReportRepo.NewTrashReportRepo(db)
+	trashReportService := trashReportService.NewTrashReportService(trashReportRepo)
+	trashReportController := trashReportController.NewTrashReportController(trashReportService)
+
 	routeController := routes.RouteController{
 		AuthController:     authController,
 		TouristsController: touristsController,
 		PlacesController:   placesController,
 		VisitReportController: visitReportController,
+		TrashReportController: trashReportController,
 	}
 	routeController.InitRoute(e)
 

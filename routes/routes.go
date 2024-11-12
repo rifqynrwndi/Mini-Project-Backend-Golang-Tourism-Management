@@ -6,6 +6,7 @@ import (
 	"tourism-monitoring/controllers/places"
 	"tourism-monitoring/controllers/tourists"
 	"tourism-monitoring/controllers/visit_report"
+	"tourism-monitoring/controllers/trash_report"
 	"tourism-monitoring/middleware"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -19,6 +20,8 @@ type RouteController struct {
 	TouristsController *tourists.TouristsController
 	PlacesController   *places.PlacesController
 	VisitReportController *visit_report.VisitReportController
+	TrashReportController *trash_report.TrashReportController
+
 }
 
 func (rc RouteController) InitRoute(e *echo.Echo) {
@@ -70,4 +73,13 @@ func (rc RouteController) InitRoute(e *echo.Echo) {
 	eAdminVisitReport.POST("", rc.VisitReportController.InsertVisitReport)
 	eAdminVisitReport.PUT("/:id", rc.VisitReportController.UpdateVisitReport)
 	eAdminVisitReport.DELETE("/:id", rc.VisitReportController.DeleteVisitReport)
+
+	// Admin-only routes for trash report
+	eAdminTrashReport := eJWT.Group("/trash_reports")
+	eAdminTrashReport.Use(middleware.AdminOnly)
+	eAdminTrashReport.GET("/objek_wisata/:id", rc.TrashReportController.GetTrashReportByPlaceID)
+	eAdminTrashReport.GET("/:id", rc.TrashReportController.GetTrashReportByID)
+	eAdminTrashReport.POST("", rc.TrashReportController.InsertTrashReport)
+	eAdminTrashReport.PUT("/:id", rc.TrashReportController.UpdateTrashReport)
+	eAdminTrashReport.DELETE("/:id", rc.TrashReportController.DeleteTrashReport)
 }

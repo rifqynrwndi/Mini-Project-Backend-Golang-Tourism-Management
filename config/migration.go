@@ -10,4 +10,5 @@ func MigrateDB(db *gorm.DB) {
 	db.AutoMigrate(&entities.User{})
 	db.AutoMigrate(&entities.Place{})
 	db.AutoMigrate(&entities.VisitReport{})
+	db.AutoMigrate(&entities.TrashReport{})
 }
