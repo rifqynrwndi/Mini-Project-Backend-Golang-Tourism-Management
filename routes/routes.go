@@ -77,7 +77,7 @@ func (rc RouteController) InitRoute(e *echo.Echo) {
 	// Admin-only routes for trash report
 	eAdminTrashReport := eJWT.Group("/trash_reports")
 	eAdminTrashReport.Use(middleware.AdminOnly)
-	eAdminTrashReport.GET("/objek_wisata/:id", rc.TrashReportController.GetTrashReportByPlaceID)
+	eAdminTrashReport.GET("/places/:id", rc.TrashReportController.GetTrashReportByPlaceID)
 	eAdminTrashReport.GET("/:id", rc.TrashReportController.GetTrashReportByID)
 	eAdminTrashReport.POST("", rc.TrashReportController.InsertTrashReport)
 	eAdminTrashReport.PUT("/:id", rc.TrashReportController.UpdateTrashReport)

@@ -3,6 +3,7 @@ package visit_report
 import (
 	"strconv"
 	"tourism-monitoring/controllers/base"
+	"tourism-monitoring/controllers/visit_report/response"
 	"tourism-monitoring/controllers/visit_report/request"
 	"tourism-monitoring/services/visit_report"
 
@@ -22,20 +23,26 @@ func (controller *VisitReportController) GetAllVisitReports(c echo.Context) erro
 	if err != nil {
 		return base.ErrorResponse(c, err)
 	}
-	return base.SuccesResponse(c, reports)
+	return base.SuccesResponse(c, response.FromVisitReportEntities(reports))
 }
 
 func (controller *VisitReportController) GetVisitReportByID(c echo.Context) error {
-	id, _ := strconv.Atoi(c.Param("id"))
-	report, err := controller.service.GetVisitReportByID(id)
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		return base.ErrorResponse(c, err)
 	}
-	return base.SuccesResponse(c, report)
+
+	visitReport, err := controller.service.GetVisitReportByID(id)
+	if err != nil {
+		return base.ErrorResponse(c, err)
+	}
+
+	return base.SuccesResponse(c, response.FromVisitReportEntity(visitReport))
 }
 
 func (controller *VisitReportController) InsertVisitReport(c echo.Context) error {
 	req := new(request.VisitReportRequest)
+
 	if err := c.Bind(req); err != nil {
 		return base.ErrorResponse(c, err)
 	}
@@ -49,6 +56,7 @@ func (controller *VisitReportController) InsertVisitReport(c echo.Context) error
 	if err != nil {
 		return base.ErrorResponse(c, err)
 	}
+
 	return base.SuccesResponse(c, createdReport)
 }
 

@@ -27,5 +27,5 @@ func (visitReportRequest VisitReportRequest) ToEntities() (entities.VisitReport,
 		TanggalKunjungan:         parsedDate,
 		EstimasiEmisiKarbon:      visitReportRequest.EstimasiEmisiKarbon,
 		CatatanSampahPerKilogram: visitReportRequest.CatatanSampahPerKilogram,
-	} , nil
+	}, nil
 }

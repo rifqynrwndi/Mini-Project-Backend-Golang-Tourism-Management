@@ -14,37 +14,43 @@ func NewVisitReportRepo(db *gorm.DB) *VisitReportRepo {
 }
 
 func (repo VisitReportRepo) GetAllVisitReports() ([]entities.VisitReport, error) {
-	var visitReports []entities.VisitReport
-	if err := repo.db.Find(&visitReports).Error; err != nil {
-		return nil, err
-	}
-	return visitReports, nil
+    var visitReports []entities.VisitReport
+    if err := repo.db.Preload("Wisatawan").Preload("ObjekWisata").Find(&visitReports).Error; err != nil {
+        return nil, err
+    }
+    return visitReports, nil
 }
 
 func (repo VisitReportRepo) GetVisitReportByID(id int) (entities.VisitReport, error) {
-	var visitReports []entities.VisitReport
-	if err := repo.db.Where("id = ?", id).Find(&visitReports).Error; err != nil {
-		return entities.VisitReport{}, err
-	}
-
-	if len(visitReports) == 0 {
-        return entities.VisitReport{}, gorm.ErrRecordNotFound
+    var visitReport entities.VisitReport
+    if err := repo.db.Preload("Wisatawan").Preload("ObjekWisata").Where("id = ?", id).First(&visitReport).Error; err != nil {
+        return entities.VisitReport{}, err
     }
-	return visitReports[0], nil
+    return visitReport, nil
 }
 
 func (repo VisitReportRepo) InsertVisitReport(visitReport entities.VisitReport) (entities.VisitReport, error) {
 	if err := repo.db.Create(&visitReport).Error; err != nil {
 		return entities.VisitReport{}, err
 	}
-	return visitReport, nil
+
+	var reportWithRelations entities.VisitReport
+    if err := repo.db.Preload("Wisatawan").Preload("ObjekWisata").First(&reportWithRelations, visitReport.ID).Error; err != nil {
+        return entities.VisitReport{}, err
+    }
+    return reportWithRelations, nil
 }
 
 func (repo VisitReportRepo) UpdateVisitReport(id int, visitReport entities.VisitReport) (entities.VisitReport, error) {
     if err := repo.db.Model(&visitReport).Where("id = ?", id).Updates(visitReport).Error; err != nil {
         return entities.VisitReport{}, err
     }
-    return visitReport, nil
+    
+	var reportWithRelations entities.VisitReport
+	if err := repo.db.Preload("Wisatawan").Preload("ObjekWisata").First(&reportWithRelations, visitReport.ID).Error; err != nil {
+		return entities.VisitReport{}, err
+	}
+	return reportWithRelations, nil
 }
 
 func (repo VisitReportRepo) DeleteVisitReport(id int) error {
