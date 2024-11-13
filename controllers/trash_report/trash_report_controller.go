@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strconv"
 	"tourism-monitoring/controllers/base"
+	"tourism-monitoring/controllers/trash_report/response"
 	"tourism-monitoring/controllers/trash_report/request"
 	"tourism-monitoring/services/trash_report"
 
@@ -24,7 +25,7 @@ func (controller *TrashReportController) GetTrashReportByPlaceID(c echo.Context)
 	if err != nil {
 		return base.ErrorResponse(c, err)
 	}
-	return base.SuccesResponse(c, reports)
+	return base.SuccesResponse(c, response.FromTrashReportEntities(reports))
 }
 
 func (controller *TrashReportController) GetTrashReportByID(c echo.Context) error {
@@ -33,7 +34,7 @@ func (controller *TrashReportController) GetTrashReportByID(c echo.Context) erro
 	if err != nil {
 		return base.ErrorResponse(c, err)
 	}
-	return base.SuccesResponse(c, report)
+	return base.SuccesResponse(c, response.FromTrashReportEntity(report))
 }
 
 func (controller *TrashReportController) InsertTrashReport(c echo.Context) error {
@@ -51,33 +52,33 @@ func (controller *TrashReportController) InsertTrashReport(c echo.Context) error
 	if err != nil {
 		return base.ErrorResponse(c, err)
 	}
-	return base.SuccesResponse(c, createdReport)
+	return base.SuccesResponse(c, response.FromTrashReportEntity(createdReport))
 }
 
 func (controller *TrashReportController) UpdateTrashReport(c echo.Context) error {
 	id, _ := strconv.Atoi(c.Param("id"))
-    
-    req := new(request.TrashReportRequest)
-    if err := c.Bind(req); err != nil {
-        return base.ErrorResponse(c, err)
-    }
 
-    report, err := req.ToEntities()
-    if err != nil {
-        return base.ErrorResponse(c, err)
-    }
+	req := new(request.TrashReportRequest)
+	if err := c.Bind(req); err != nil {
+		return base.ErrorResponse(c, err)
+	}
 
-    report.ID = id 
-    if report.ObjekWisataID == 0 {
-        return base.ErrorResponse(c, fmt.Errorf("objek_wisata_id tidak valid"))
-    }
+	report, err := req.ToEntities()
+	if err != nil {
+		return base.ErrorResponse(c, err)
+	}
 
-    updatedReport, err := controller.service.UpdateTrashReport(id, report)
-    if err != nil {
-        return base.ErrorResponse(c, err)
-    }
+	report.ID = id
+	if report.ObjekWisataID == 0 {
+		return base.ErrorResponse(c, fmt.Errorf("objek_wisata_id tidak valid"))
+	}
 
-    return base.SuccesResponse(c, updatedReport)
+	updatedReport, err := controller.service.UpdateTrashReport(id, report)
+	if err != nil {
+		return base.ErrorResponse(c, err)
+	}
+
+	return base.SuccesResponse(c, response.FromTrashReportEntity(updatedReport))
 }
 
 func (controller *TrashReportController) DeleteTrashReport(c echo.Context) error {
