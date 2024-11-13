@@ -3,8 +3,9 @@ package visit_report
 import (
 	"strconv"
 	"tourism-monitoring/controllers/base"
-	"tourism-monitoring/controllers/visit_report/response"
+	"tourism-monitoring/controllers/pagination"
 	"tourism-monitoring/controllers/visit_report/request"
+	"tourism-monitoring/controllers/visit_report/response"
 	"tourism-monitoring/services/visit_report"
 
 	"github.com/labstack/echo/v4"
@@ -19,11 +20,26 @@ func NewVisitReportController(service *visit_report.VisitReportService) *VisitRe
 }
 
 func (controller *VisitReportController) GetAllVisitReports(c echo.Context) error {
-	reports, err := controller.service.GetAllVisitReports()
+	page, _ := strconv.Atoi(c.QueryParam("page"))
+	limit, _ := strconv.Atoi(c.QueryParam("limit"))
+
+	if page < 1 {
+		page = 1
+	}
+	if limit < 1 {
+		limit = 10
+	}
+
+	totalCount, err := controller.service.GetTotalVisitReportsCount()
 	if err != nil {
 		return base.ErrorResponse(c, err)
 	}
-	return base.SuccesResponse(c, response.FromVisitReportEntities(reports))
+
+	reports, err := controller.service.GetAllVisitReports(page, limit)
+	if err != nil {
+		return base.ErrorResponse(c, err)
+	}
+	return pagination.SuccessPaginatedResponse(c, reports, page, limit, totalCount)
 }
 
 func (controller *VisitReportController) GetVisitReportByID(c echo.Context) error {
