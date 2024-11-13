@@ -63,3 +63,11 @@ func (repo TrashReportRepo) DeleteTrashReport(id int) error {
 	}
 	return nil
 }
+
+func (repo TrashReportRepo) GetTotalTrashReportsCount() (int64, error) {
+	var count int64
+	if err := repo.db.Model(&entities.TrashReport{}).Count(&count).Error; err != nil {
+		return 0, err
+	}
+	return count, nil
+}

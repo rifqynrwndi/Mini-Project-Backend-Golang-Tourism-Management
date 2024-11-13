@@ -4,8 +4,9 @@ import (
 	"fmt"
 	"strconv"
 	"tourism-monitoring/controllers/base"
-	"tourism-monitoring/controllers/trash_report/response"
+	"tourism-monitoring/controllers/pagination"
 	"tourism-monitoring/controllers/trash_report/request"
+	"tourism-monitoring/controllers/trash_report/response"
 	"tourism-monitoring/services/trash_report"
 
 	"github.com/labstack/echo/v4"
@@ -20,12 +21,27 @@ func NewTrashReportController(service *trash_report.TrashReportService) *TrashRe
 }
 
 func (controller *TrashReportController) GetTrashReportByPlaceID(c echo.Context) error {
+	page, _ := strconv.Atoi(c.QueryParam("page"))
+	limit, _ := strconv.Atoi(c.QueryParam("limit"))
+
+	if page < 1 {
+		page = 1
+	}
+	if limit < 1 {
+		limit = 10
+	}
+
+	totalCount, err := controller.service.GetTotalTrashReportsCount()
+	if err != nil {
+		return base.ErrorResponse(c, err)
+	}
+
 	id, _ := strconv.Atoi(c.Param("id"))
 	reports, err := controller.service.GetTrashReportByPlaceID(id)
 	if err != nil {
 		return base.ErrorResponse(c, err)
 	}
-	return base.SuccesResponse(c, response.FromTrashReportEntities(reports))
+	return pagination.SuccessPaginatedResponse(c, reports, page, limit, totalCount)
 }
 
 func (controller *TrashReportController) GetTrashReportByID(c echo.Context) error {

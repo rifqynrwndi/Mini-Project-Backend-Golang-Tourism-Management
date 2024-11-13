@@ -32,3 +32,7 @@ func (service TrashReportService) UpdateTrashReport(id int, trashReport entities
 func (service TrashReportService) DeleteTrashReport(id int) error {
 	return service.repo.DeleteTrashReport(id)
 }
+
+func (service TrashReportService) GetTotalTrashReportsCount() (int64, error) {
+	return service.repo.GetTotalTrashReportsCount()
+}
