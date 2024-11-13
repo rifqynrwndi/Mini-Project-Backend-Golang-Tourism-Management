@@ -3,6 +3,7 @@ package tourists
 import (
 	"strconv"
 	"tourism-monitoring/controllers/base"
+	"tourism-monitoring/controllers/pagination"
 	"tourism-monitoring/controllers/tourists/response"
 	"tourism-monitoring/entities"
 	"tourism-monitoring/services/tourists"
@@ -19,11 +20,26 @@ func NewTouristsController(service *tourists.TouristsService) *TouristsControlle
 }
 
 func (controller TouristsController) GetAllTourists(c echo.Context) error {
+	page, _ := strconv.Atoi(c.QueryParam("page"))
+	limit, _ := strconv.Atoi(c.QueryParam("limit"))
+
+	if page < 1 {
+		page = 1
+	}
+	if limit < 1 {
+		limit = 10
+	}
+
+	totalCount, err := controller.touristsService.GetTotalTouristsCount()
+
+	if err != nil {
+		return base.ErrorResponse(c, err)
+	}
 	tourists, err := controller.touristsService.GetAllTourists()
 	if err != nil {
 		return base.ErrorResponse(c, err)
 	}
-	return base.SuccesResponse(c, response.FromTouristEntities(tourists))
+	return pagination.SuccessPaginatedResponse(c, tourists, page, limit, totalCount)
 }
 
 func (controller TouristsController) GetTouristByID(c echo.Context) error {
