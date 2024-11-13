@@ -31,10 +31,10 @@ func (controller TouristsController) GetAllTourists(c echo.Context) error {
 	}
 
 	totalCount, err := controller.touristsService.GetTotalTouristsCount()
-
 	if err != nil {
 		return base.ErrorResponse(c, err)
 	}
+	
 	tourists, err := controller.touristsService.GetAllTourists()
 	if err != nil {
 		return base.ErrorResponse(c, err)

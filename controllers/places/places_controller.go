@@ -3,6 +3,7 @@ package places
 import (
 	"strconv"
 	"tourism-monitoring/controllers/base"
+	"tourism-monitoring/controllers/pagination"
 	"tourism-monitoring/controllers/places/response"
 	"tourism-monitoring/entities"
 	"tourism-monitoring/services/places"
@@ -19,11 +20,26 @@ func NewPlacesController(service *places.PlacesService) *PlacesController {
 }
 
 func (controller PlacesController) GetAllPlaces(c echo.Context) error {
+	page, _ := strconv.Atoi(c.QueryParam("page"))
+	limit, _ := strconv.Atoi(c.QueryParam("limit"))
+
+	if page < 1 {
+		page = 1
+	}
+	if limit < 1 {
+		limit = 10
+	}
+
+	totalCount, err := controller.placesService.GetTotalPlacesCount()
+	if err != nil {
+		return base.ErrorResponse(c, err)
+	}
+
 	places, err := controller.placesService.GetAllPlaces()
 	if err != nil {
 		return base.ErrorResponse(c, err)
 	}
-	return base.SuccesResponse(c, response.FromPlaceEntities(places))
+	return pagination.SuccessPaginatedResponse(c, places, page, limit, totalCount)
 }
 
 func (controller PlacesController) GetPlaceById(c echo.Context) error {
