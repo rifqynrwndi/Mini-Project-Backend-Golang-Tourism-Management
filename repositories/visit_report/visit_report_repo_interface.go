@@ -9,5 +9,5 @@ type VisitReportRepoInterface interface {
 	UpdateVisitReport(id int, visitReport entities.VisitReport) (entities.VisitReport, error)
 	DeleteVisitReport(id int) error
 	GetTotalVisitReportsCount() (int64, error)
-
+	GetAverageVisitsForPlace(placeID int) (float64, error)
 }

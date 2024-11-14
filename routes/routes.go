@@ -2,11 +2,12 @@ package routes
 
 import (
 	"os"
+	"tourism-monitoring/controllers/ai"
 	"tourism-monitoring/controllers/auth"
 	"tourism-monitoring/controllers/places"
 	"tourism-monitoring/controllers/tourists"
-	"tourism-monitoring/controllers/visit_report"
 	"tourism-monitoring/controllers/trash_report"
+	"tourism-monitoring/controllers/visit_report"
 	"tourism-monitoring/middleware"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -16,12 +17,12 @@ import (
 )
 
 type RouteController struct {
-	AuthController     *auth.AuthController
-	TouristsController *tourists.TouristsController
-	PlacesController   *places.PlacesController
+	AuthController        *auth.AuthController
+	TouristsController    *tourists.TouristsController
+	PlacesController      *places.PlacesController
 	VisitReportController *visit_report.VisitReportController
 	TrashReportController *trash_report.TrashReportController
-
+	AIController          *ai.AIController
 }
 
 func (rc RouteController) InitRoute(e *echo.Echo) {
@@ -82,4 +83,7 @@ func (rc RouteController) InitRoute(e *echo.Echo) {
 	eAdminTrashReport.POST("", rc.TrashReportController.InsertTrashReport)
 	eAdminTrashReport.PUT("/:id", rc.TrashReportController.UpdateTrashReport)
 	eAdminTrashReport.DELETE("/:id", rc.TrashReportController.DeleteTrashReport)
+
+	// Public routes for AI Prediction
+	e.GET("/predict", rc.AIController.PredictVisitsAndRecommend)
 }

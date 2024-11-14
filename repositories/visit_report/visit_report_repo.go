@@ -69,3 +69,12 @@ func (repo VisitReportRepo) GetTotalVisitReportsCount() (int64, error) {
 	}
 	return count, nil
 }
+
+func (repo VisitReportRepo) GetAverageVisitsForPlace(placeID int) (float64, error) {
+    var count int64
+    if err := repo.db.Model(&entities.VisitReport{}).Where("objek_wisata_id = ?", placeID).Count(&count).Error; err != nil {
+        return 0, err
+    }
+
+    return float64(count), nil
+}
