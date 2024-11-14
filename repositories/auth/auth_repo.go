@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"errors"
 	"tourism-monitoring/entities"
 
 	"gorm.io/gorm"
@@ -42,7 +43,11 @@ func (authRepo AuthRepo) GetUserByEmail(email string) (entities.User, error) {
 
 func (authRepo AuthRepo) GetLastUserID() (int, error) {
     var user entities.User
-    if err := authRepo.db.Last(&user).Error; err != nil {
+    err := authRepo.db.Last(&user).Error
+    if err != nil {
+        if errors.Is(err, gorm.ErrRecordNotFound) {
+            return 1, nil
+        }
         return 0, err
     }
     return user.ID, nil

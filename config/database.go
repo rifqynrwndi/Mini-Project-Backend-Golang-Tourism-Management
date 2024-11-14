@@ -9,18 +9,18 @@ import (
 )
 
 type ConfigDB struct {
-	Host     string
 	User     string
 	Password string
+	Host     string
 	Port     string
 	Name     string
 }
 
 func InitDatabase() (*gorm.DB, error) {
 	configDB := ConfigDB{
-		Host:     os.Getenv("DATABASE_HOST"),
 		User:     os.Getenv("DATABASE_USER"),
 		Password: os.Getenv("DATABASE_PASSWORD"),
+		Host:     os.Getenv("DATABASE_HOST"),
 		Port:     os.Getenv("DATABASE_PORT"),
 		Name:     os.Getenv("DATABASE_NAME"),
 	}
