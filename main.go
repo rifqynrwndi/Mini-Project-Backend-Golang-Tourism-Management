@@ -3,14 +3,27 @@ package main
 import (
 	"log"
 	"tourism-monitoring/config"
+	AIController "tourism-monitoring/controllers/ai"
 	authController "tourism-monitoring/controllers/auth"
+	placesController "tourism-monitoring/controllers/places"
 	touristsController "tourism-monitoring/controllers/tourists"
+	trashReportController "tourism-monitoring/controllers/trash_report"
+	visitReportController "tourism-monitoring/controllers/visit_report"
+
 	"tourism-monitoring/middleware"
 	authRepo "tourism-monitoring/repositories/auth"
+	placesRepo "tourism-monitoring/repositories/places"
 	touristsRepo "tourism-monitoring/repositories/tourists"
+	trashReportRepo "tourism-monitoring/repositories/trash_report"
+	visitReportRepo "tourism-monitoring/repositories/visit_report"
+
 	"tourism-monitoring/routes"
 	authService "tourism-monitoring/services"
+	AIService "tourism-monitoring/services/ai"
+	placesService "tourism-monitoring/services/places"
 	touristsService "tourism-monitoring/services/tourists"
+	trashReportService "tourism-monitoring/services/trash_report"
+	visitReportService "tourism-monitoring/services/visit_report"
 
 	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
@@ -40,9 +53,35 @@ func main() {
 	touristsService := touristsService.NewTouristsService(touristsRepo)
 	touristsController := touristsController.NewTouristsController(touristsService)
 
+	// Initialize Places
+	placesRepo := placesRepo.NewPlacesRepo(db)
+	placesService := placesService.NewPlacesService(placesRepo)
+	placesController := placesController.NewPlacesController(placesService)
+
+	// Initialize Visit Report
+	visitReportRepo := visitReportRepo.NewVisitReportRepo(db)
+	visitReportService := visitReportService.NewVisitReportService(visitReportRepo)
+	visitReportController := visitReportController.NewVisitReportController(visitReportService)
+
+	// Initialize Trash Report
+	trashReportRepo := trashReportRepo.NewTrashReportRepo(db)
+	trashReportService := trashReportService.NewTrashReportService(trashReportRepo)
+	trashReportController := trashReportController.NewTrashReportController(trashReportService)
+
+	// Initialize AI
+	aiService, err := AIService.NewAIService(visitReportRepo, placesRepo)
+	if err != nil {
+		log.Fatalf("AI service initialization failed: %v", err)
+	}
+	aiController := AIController.NewAIController(aiService)
+
 	routeController := routes.RouteController{
-		AuthController:     authController,
-		TouristsController: touristsController,
+		AuthController:        authController,
+		TouristsController:    touristsController,
+		PlacesController:      placesController,
+		VisitReportController: visitReportController,
+		TrashReportController: trashReportController,
+		AIController:          aiController,
 	}
 	routeController.InitRoute(e)
 

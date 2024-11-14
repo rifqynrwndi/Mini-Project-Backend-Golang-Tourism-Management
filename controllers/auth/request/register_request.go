@@ -10,6 +10,7 @@ type RegisterRequest struct {
 	TipeWisatawan string `json:"tipe_wisatawan"`
 	Email         string `json:"email"`
 	Password      string `json:"password"`
+	Role		  string `json:"role,omitempty"`
 }
 
 func (registerRequest RegisterRequest) ToEntities() entities.User {
@@ -21,5 +22,6 @@ func (registerRequest RegisterRequest) ToEntities() entities.User {
 		TipeWisatawan: registerRequest.TipeWisatawan,
 		Email:        registerRequest.Email,
 		Password:     registerRequest.Password,
+		Role:		  registerRequest.Role,
 	}
 }
