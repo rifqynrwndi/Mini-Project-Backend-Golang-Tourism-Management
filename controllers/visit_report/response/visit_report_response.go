@@ -3,12 +3,12 @@ package response
 import "tourism-monitoring/entities"
 
 type VisitReportResponse struct {
-	ID                       int     `json:"id"`
-	WisatawanID              int     `json:"id_wisatawan"`
-	ObjekWisataID            int     `json:"id_objek_wisata"`
-	TanggalKunjungan         string  `json:"tanggal_kunjungan"`
-	EstimasiEmisiKarbon      float64 `json:"estimasi_emisi_karbon"`
-	CatatanSampahPerKilogram float64 `json:"catatan_sampah_per_kilogram"`
+	ID                       int     		`json:"id"`
+	Wisatawan 				 entities.User 	`json:"wisatawan"`
+	ObjekWisata              entities.Place `json:"objek_wisata"`
+	TanggalKunjungan         string  		`json:"tanggal_kunjungan"`
+	EstimasiEmisiKarbon      float64 		`json:"estimasi_emisi_karbon"`
+	CatatanSampahPerKilogram float64 		`json:"catatan_sampah_per_kilogram"`
 }
 
 func FromVisitReportEntities(visitReports []entities.VisitReport) []VisitReportResponse {
@@ -16,8 +16,8 @@ func FromVisitReportEntities(visitReports []entities.VisitReport) []VisitReportR
 	for _, visitReport := range visitReports {
 		responses = append(responses, VisitReportResponse{
 			ID:                       visitReport.ID,
-			WisatawanID:              visitReport.WisatawanID,
-			ObjekWisataID:            visitReport.ObjekWisataID,
+			Wisatawan:                visitReport.Wisatawan,
+			ObjekWisata:              visitReport.ObjekWisata,
 			TanggalKunjungan:         visitReport.TanggalKunjungan.Format("2006-01-02"),
 			EstimasiEmisiKarbon:      visitReport.EstimasiEmisiKarbon,
 			CatatanSampahPerKilogram: visitReport.CatatanSampahPerKilogram,
@@ -29,8 +29,8 @@ func FromVisitReportEntities(visitReports []entities.VisitReport) []VisitReportR
 func FromVisitReportEntity(visitReport entities.VisitReport) VisitReportResponse {
 	return VisitReportResponse{
 		ID:                       visitReport.ID,
-		WisatawanID:              visitReport.WisatawanID,
-		ObjekWisataID:            visitReport.ObjekWisataID,
+		Wisatawan:                visitReport.Wisatawan,
+		ObjekWisata:              visitReport.ObjekWisata,
 		TanggalKunjungan:         visitReport.TanggalKunjungan.Format("2006-01-02"),
 		EstimasiEmisiKarbon:      visitReport.EstimasiEmisiKarbon,
 		CatatanSampahPerKilogram: visitReport.CatatanSampahPerKilogram,

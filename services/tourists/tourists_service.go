@@ -32,3 +32,7 @@ func (service TouristsService) UpdateTourist(id int, user entities.User) (entiti
 func (service TouristsService) DeleteTourist(id int) error {
 	return service.touristsRepo.DeleteTourist(id)
 }
+
+func (service TouristsService) GetTotalTouristsCount() (int64, error) {
+	return service.touristsRepo.GetTotalTouristsCount()
+}

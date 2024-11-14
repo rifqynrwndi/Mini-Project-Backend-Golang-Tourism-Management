@@ -8,4 +8,5 @@ type TouristsRepoInterface interface {
 	InsertTourist(user entities.User) (entities.User, error)
 	UpdateTourist(id int, user entities.User) (entities.User, error)
 	DeleteTourist(id int) error
+	GetTotalTouristsCount() (int64, error)
 }

@@ -15,7 +15,7 @@ func NewTrashReportRepo(db *gorm.DB) *TrashReportRepo {
 
 func (repo TrashReportRepo) GetTrashReportByPlaceID(id int) ([]entities.TrashReport, error) {
 	var trashReports []entities.TrashReport
-	if err := repo.db.Where("objek_wisata_id = ?", id).Find(&trashReports).Error; err != nil {
+	if err := repo.db.Preload("ObjekWisata").Where("objek_wisata_id = ?", id).Find(&trashReports).Error; err != nil {
 		return nil, err
 	}
 	return trashReports, nil
@@ -23,7 +23,7 @@ func (repo TrashReportRepo) GetTrashReportByPlaceID(id int) ([]entities.TrashRep
 
 func (repo TrashReportRepo) GetTrashReportByID(id int) (entities.TrashReport, error) {
 	var trashReports []entities.TrashReport
-	if err := repo.db.Where("id = ?", id).Find(&trashReports).Error; err != nil {
+	if err := repo.db.Preload("ObjekWisata").Where("id = ?", id).Find(&trashReports).Error; err != nil {
 		return entities.TrashReport{}, err
 	}
 
@@ -37,14 +37,23 @@ func (repo TrashReportRepo) InsertTrashReport(trashReport entities.TrashReport) 
 	if err := repo.db.Create(&trashReport).Error; err != nil {
 		return entities.TrashReport{}, err
 	}
-	return trashReport, nil
+	
+	var reportWithRelations entities.TrashReport
+    if err := repo.db.Preload("ObjekWisata").First(&reportWithRelations, trashReport.ID).Error; err != nil {
+        return entities.TrashReport{}, err
+    }
+    return reportWithRelations, nil
 }
 
 func (repo TrashReportRepo) UpdateTrashReport(id int, trashReport entities.TrashReport) (entities.TrashReport, error) {
 	if err := repo.db.Model(&trashReport).Where("id = ?", id).Updates(trashReport).Error; err != nil {
 		return entities.TrashReport{}, err
 	}
-	return trashReport, nil
+	var reportWithRelations entities.TrashReport
+    if err := repo.db.Preload("ObjekWisata").First(&reportWithRelations, trashReport.ID).Error; err != nil {
+        return entities.TrashReport{}, err
+    }
+    return reportWithRelations, nil
 }
 
 func (repo TrashReportRepo) DeleteTrashReport(id int) error {
@@ -53,4 +62,12 @@ func (repo TrashReportRepo) DeleteTrashReport(id int) error {
 		return err
 	}
 	return nil
+}
+
+func (repo TrashReportRepo) GetTotalTrashReportsCount() (int64, error) {
+	var count int64
+	if err := repo.db.Model(&entities.TrashReport{}).Count(&count).Error; err != nil {
+		return 0, err
+	}
+	return count, nil
 }

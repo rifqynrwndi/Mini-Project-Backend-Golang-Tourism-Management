@@ -10,5 +10,6 @@ type PlacesRepoInterface interface {
 	InsertPlace(place entities.Place) (entities.Place, error)
 	UpdatePlace(id int, place entities.Place) (entities.Place, error)
 	DeletePlace(id int) error
+	GetTotalPlacesCount() (int64, error)
 }
 

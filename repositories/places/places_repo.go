@@ -55,4 +55,12 @@ func (repo PlacesRepo) DeletePlace(id int) error {
 	return nil
 }
 
+func (repo PlacesRepo) GetTotalPlacesCount() (int64, error) {
+	var count int64
+	if err := repo.db.Model(&entities.Place{}).Count(&count).Error; err != nil {
+		return 0, err
+	}
+	return count, nil
+}
+
 

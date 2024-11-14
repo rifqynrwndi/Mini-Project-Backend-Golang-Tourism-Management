@@ -32,3 +32,7 @@ func (service PlacesService) UpdatePlace(id int, place entities.Place) (entities
 func (service PlacesService) DeletePlace(id int) error {
 	return service.placesRepo.DeletePlace(id)
 }
+
+func (service PlacesService) GetTotalPlacesCount() (int64, error) {
+	return service.placesRepo.GetTotalPlacesCount()
+}
