@@ -97,24 +97,26 @@ func TestVisitReportService_GetVisitReportByID(t *testing.T) {
 
 func TestVisitReportService_InsertVisitReport(t *testing.T) {
 	mockRepo := new(MockVisitReportRepo)
+	service := visit_report.NewVisitReportService(mockRepo)
 
-	report := entities.VisitReport{
-		TanggalKunjungan: time.Date(2024, 11, 3, 0, 0, 0, 0, time.UTC),
-		EstimasiEmisiKarbon: 12.7,
+	// Input data
+	visitReport := entities.VisitReport{
+		TanggalKunjungan: time.Date(2024, time.November, 3, 0, 0, 0, 0, time.UTC),
 	}
 
-	expectedReport := report
-	expectedReport.ID = 1
+	// Expected data
+	expectedReport := visitReport
+	expectedReport.EstimasiEmisiKarbon = 20
 
-	mockRepo.On("InsertVisitReport", report).Return(expectedReport, nil)
+	mockRepo.On("InsertVisitReport", expectedReport).Return(expectedReport, nil)
 
-	service := visit_report.NewVisitReportService(mockRepo)
-	result, err := service.InsertVisitReport(report, "car", 100.0)
+	result, err := service.InsertVisitReport(visitReport, "car", 100)
 
 	assert.NoError(t, err)
 	assert.Equal(t, expectedReport, result)
 	mockRepo.AssertExpectations(t)
 }
+
 
 func TestVisitReportService_DeleteVisitReport(t *testing.T) {
 	mockRepo := new(MockVisitReportRepo)
