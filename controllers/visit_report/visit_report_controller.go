@@ -73,7 +73,7 @@ func (controller *VisitReportController) InsertVisitReport(c echo.Context) error
 		return base.ErrorResponse(c, err)
 	}
 
-	return base.SuccesResponse(c, createdReport)
+	return base.SuccesResponse(c, response.FromVisitReportEntity(createdReport))
 }
 
 func (controller *VisitReportController) UpdateVisitReport(c echo.Context) error {
@@ -94,7 +94,7 @@ func (controller *VisitReportController) UpdateVisitReport(c echo.Context) error
 		return base.ErrorResponse(c, err)
 	}
 
-	return base.SuccesResponse(c, updatedReport)
+	return base.SuccesResponse(c, response.FromVisitReportEntity(updatedReport))
 }
 
 func (controller *VisitReportController) DeleteVisitReport(c echo.Context) error {

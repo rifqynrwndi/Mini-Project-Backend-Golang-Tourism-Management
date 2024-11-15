@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"os"
 	"strings"
-	"tourism-monitoring/repositories/visit_report"
 	"tourism-monitoring/repositories/places"
+	"tourism-monitoring/repositories/visit_report"
 
 	"github.com/google/generative-ai-go/genai"
 	"google.golang.org/api/option"
@@ -31,7 +31,6 @@ func NewAIService(visitReportRepo *visit_report.VisitReportRepo, placesRepo *pla
 	}, nil
 }
 
-
 func (service *AIService) GetVisitDataForPrediction(placeID int) (int, float64, error) {
 	place, err := service.placesRepo.GetPlaceByID(placeID)
 	if err != nil {
@@ -45,7 +44,6 @@ func (service *AIService) GetVisitDataForPrediction(placeID int) (int, float64, 
 
 	return place.JumlahPengunjung, avgVisits, nil
 }
-
 
 func (service *AIService) PredictVisitsAndRecommend(placeID int) (result string, err error) {
 	jumlahPengunjung, rataRataKunjungan, err := service.GetVisitDataForPrediction(placeID)
