@@ -8,6 +8,7 @@ import (
 	"tourism-monitoring/controllers/tourists"
 	"tourism-monitoring/controllers/trash_report"
 	"tourism-monitoring/controllers/visit_report"
+	"tourism-monitoring/controllers/weather"
 	"tourism-monitoring/middleware"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -23,6 +24,7 @@ type RouteController struct {
 	VisitReportController *visit_report.VisitReportController
 	TrashReportController *trash_report.TrashReportController
 	AIController          *ai.AIController
+	WeatherController     *weather.WeatherController
 }
 
 func (rc RouteController) InitRoute(e *echo.Echo) {
@@ -86,4 +88,7 @@ func (rc RouteController) InitRoute(e *echo.Echo) {
 
 	// Public routes for AI Prediction
 	e.GET("/predict", rc.AIController.PredictVisitsAndRecommend)
+
+	// Public routes for weather
+	e.GET("/weather", rc.WeatherController.GetWeather)
 }

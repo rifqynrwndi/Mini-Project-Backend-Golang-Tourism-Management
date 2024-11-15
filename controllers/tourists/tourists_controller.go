@@ -39,7 +39,7 @@ func (controller TouristsController) GetAllTourists(c echo.Context) error {
 	if err != nil {
 		return base.ErrorResponse(c, err)
 	}
-	return pagination.SuccessPaginatedResponse(c, tourists, page, limit, totalCount)
+	return pagination.SuccessPaginatedResponse(c, response.FromTouristEntities(tourists), page, limit, totalCount)
 }
 
 func (controller TouristsController) GetTouristByID(c echo.Context) error {
