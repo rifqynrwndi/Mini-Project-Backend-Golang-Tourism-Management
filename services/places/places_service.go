@@ -6,10 +6,10 @@ import (
 )
 
 type PlacesService struct {
-	placesRepo *places.PlacesRepo
+	placesRepo places.PlacesRepoInterface
 }
 
-func NewPlacesService(repo *places.PlacesRepo) *PlacesService {
+func NewPlacesService(repo places.PlacesRepoInterface) *PlacesService {
 	return &PlacesService{placesRepo: repo}
 }
 

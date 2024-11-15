@@ -6,10 +6,10 @@ import (
 )
 
 type WeatherService struct {
-	repo *weather.WeatherRepo
+	repo weather.WeatherRepoInterface
 }
 
-func NewWeatherService(repo *weather.WeatherRepo) *WeatherService {
+func NewWeatherService(repo weather.WeatherRepoInterface) *WeatherService {
 	return &WeatherService{repo: repo}
 }
 

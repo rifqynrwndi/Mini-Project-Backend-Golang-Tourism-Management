@@ -6,10 +6,10 @@ import (
 )
 
 type TouristsService struct {
-	touristsRepo *tourists.TouristsRepo
+	touristsRepo tourists.TouristsRepoInterface
 }
 
-func NewTouristsService(repo *tourists.TouristsRepo) *TouristsService {
+func NewTouristsService(repo tourists.TouristsRepoInterface) *TouristsService {
 	return &TouristsService{touristsRepo: repo}
 }
 
