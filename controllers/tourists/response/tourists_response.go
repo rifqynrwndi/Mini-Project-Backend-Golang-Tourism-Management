@@ -3,7 +3,7 @@ package response
 import "tourism-monitoring/entities"
 
 type TouristResponse struct {
-	ID			  int    `json:"id"`
+	ID            int    `json:"id"`
 	Nama          string `json:"nama"`
 	Usia          int    `json:"usia"`
 	Asal          string `json:"asal"`
@@ -27,12 +27,12 @@ func FromTouristEntities(users []entities.User) []TouristResponse {
 }
 
 func FromTouristEntity(user entities.User) TouristResponse {
-    return TouristResponse{
+	return TouristResponse{
 		ID:            user.ID,
-        Nama:          user.Nama,
-        Usia:          user.Usia,
-        Asal:          user.Asal,
-        JenisKelamin:  user.JenisKelamin,
-        TipeWisatawan: user.TipeWisatawan,
-    }
+		Nama:          user.Nama,
+		Usia:          user.Usia,
+		Asal:          user.Asal,
+		JenisKelamin:  user.JenisKelamin,
+		TipeWisatawan: user.TipeWisatawan,
+	}
 }
