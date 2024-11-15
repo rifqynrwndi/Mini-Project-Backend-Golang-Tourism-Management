@@ -9,6 +9,8 @@ import (
 	touristsController "tourism-monitoring/controllers/tourists"
 	trashReportController "tourism-monitoring/controllers/trash_report"
 	visitReportController "tourism-monitoring/controllers/visit_report"
+	weatherController "tourism-monitoring/controllers/weather"
+	
 
 	"tourism-monitoring/middleware"
 	authRepo "tourism-monitoring/repositories/auth"
@@ -16,6 +18,7 @@ import (
 	touristsRepo "tourism-monitoring/repositories/tourists"
 	trashReportRepo "tourism-monitoring/repositories/trash_report"
 	visitReportRepo "tourism-monitoring/repositories/visit_report"
+	weatherRepo "tourism-monitoring/repositories/weather"
 
 	"tourism-monitoring/routes"
 	authService "tourism-monitoring/services"
@@ -24,6 +27,7 @@ import (
 	touristsService "tourism-monitoring/services/tourists"
 	trashReportService "tourism-monitoring/services/trash_report"
 	visitReportService "tourism-monitoring/services/visit_report"
+	weatherService "tourism-monitoring/services/weather"
 
 	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
@@ -75,6 +79,12 @@ func main() {
 	}
 	aiController := AIController.NewAIController(aiService)
 
+	// Initialize Weather
+	weatherRepo := weatherRepo.NewWeatherRepo()
+	weatherService := weatherService.NewWeatherService(weatherRepo)
+	weatherController := weatherController.NewWeatherController(weatherService)
+	
+
 	routeController := routes.RouteController{
 		AuthController:        authController,
 		TouristsController:    touristsController,
@@ -82,6 +92,7 @@ func main() {
 		VisitReportController: visitReportController,
 		TrashReportController: trashReportController,
 		AIController:          aiController,
+		WeatherController:     weatherController,
 	}
 	routeController.InitRoute(e)
 
