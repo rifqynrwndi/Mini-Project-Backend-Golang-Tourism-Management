@@ -8,5 +8,5 @@ type TrashReportRepoInterface interface {
 	InsertTrashReport(trashReport entities.TrashReport) (entities.TrashReport, error)
 	UpdateTrashReport(id int, trashReport entities.TrashReport) (entities.TrashReport, error)
 	DeleteTrashReport(id int) error
-	GetTotalTrashReportCount() (int64, error)
+	GetTotalTrashReportsCount() (int64, error)
 }
