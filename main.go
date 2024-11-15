@@ -11,7 +11,6 @@ import (
 	visitReportController "tourism-monitoring/controllers/visit_report"
 	weatherController "tourism-monitoring/controllers/weather"
 	
-
 	"tourism-monitoring/middleware"
 	authRepo "tourism-monitoring/repositories/auth"
 	placesRepo "tourism-monitoring/repositories/places"

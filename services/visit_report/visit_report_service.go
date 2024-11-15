@@ -6,10 +6,10 @@ import (
 )
 
 type VisitReportService struct {
-	repo *visit_report.VisitReportRepo
+	repo visit_report.VisitReportRepoInterface
 }
 
-func NewVisitReportService(repo *visit_report.VisitReportRepo) *VisitReportService {
+func NewVisitReportService(repo visit_report.VisitReportRepoInterface) *VisitReportService {
 	return &VisitReportService{repo: repo}
 }
 

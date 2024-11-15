@@ -6,33 +6,33 @@ import (
 )
 
 type TrashReportService struct {
-	repo *trash_report.TrashReportRepo
+	trashReportRepo trash_report.TrashReportRepoInterface
 }
 
-func NewTrashReportService(repo *trash_report.TrashReportRepo) *TrashReportService {
-	return &TrashReportService{repo: repo}
+func NewTrashReportService(repo trash_report.TrashReportRepoInterface) *TrashReportService {
+	return &TrashReportService{trashReportRepo: repo}
 }
 
 func (service TrashReportService) GetTrashReportByPlaceID(id int) ([]entities.TrashReport, error) {
-	return service.repo.GetTrashReportByPlaceID(id)
+	return service.trashReportRepo.GetTrashReportByPlaceID(id)
 }
 
 func (service TrashReportService) GetTrashReportByID(id int) (entities.TrashReport, error) {
-	return service.repo.GetTrashReportByID(id)
+	return service.trashReportRepo.GetTrashReportByID(id)
 }
 
 func (service TrashReportService) InsertTrashReport(trashReport entities.TrashReport) (entities.TrashReport, error) {
-	return service.repo.InsertTrashReport(trashReport)
+	return service.trashReportRepo.InsertTrashReport(trashReport)
 }
 
 func (service TrashReportService) UpdateTrashReport(id int, trashReport entities.TrashReport) (entities.TrashReport, error) {
-	return service.repo.UpdateTrashReport(id, trashReport)
+	return service.trashReportRepo.UpdateTrashReport(id, trashReport)
 }
 
 func (service TrashReportService) DeleteTrashReport(id int) error {
-	return service.repo.DeleteTrashReport(id)
+	return service.trashReportRepo.DeleteTrashReport(id)
 }
 
 func (service TrashReportService) GetTotalTrashReportsCount() (int64, error) {
-	return service.repo.GetTotalTrashReportsCount()
+	return service.trashReportRepo.GetTotalTrashReportsCount()
 }
