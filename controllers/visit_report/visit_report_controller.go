@@ -39,7 +39,7 @@ func (controller *VisitReportController) GetAllVisitReports(c echo.Context) erro
 	if err != nil {
 		return base.ErrorResponse(c, err)
 	}
-	return pagination.SuccessPaginatedResponse(c, reports, page, limit, totalCount)
+	return pagination.SuccessPaginatedResponse(c, response.FromVisitReportEntities(reports), page, limit, totalCount)
 }
 
 func (controller *VisitReportController) GetVisitReportByID(c echo.Context) error {
